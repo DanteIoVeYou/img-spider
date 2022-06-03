@@ -1,4 +1,0 @@
-/*
- * Parse config file
- *
- * */
