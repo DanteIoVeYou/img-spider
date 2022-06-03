@@ -7,3 +7,6 @@ client: $(BIN)
 .PHONY:clean
 clean:
 	rm -f client
+.PHONY:debug
+debug:
+	$(CC) -o $@ $^ $(FLAG) -g
