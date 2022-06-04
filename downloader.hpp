@@ -1,3 +1,5 @@
+#pragma once
+
 #include "http.hpp"
 
 class Downloader

@@ -1,9 +1,7 @@
 
-int main(int argc, char* argv[])
+#include "sock.hpp"
+int main(int argc, char *argv[])
 {
-  if(argc != 3) {
-    return 1;
-  }
-
+  std::cout << Socket::DNSConvertion("www.baidu.com") << std::endl;
   return 0;
 }

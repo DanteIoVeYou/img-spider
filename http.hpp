@@ -1,3 +1,5 @@
+#pragma once
+
 #include "sock.hpp"
 static const uint16_t DEFAULT_PORT = 80;
 static const std::string REQUEST_METHOD = "GET";
@@ -28,7 +30,7 @@ public:
         return _sock;
     }
 
-    std::string BuildHttpMessage(std::string uri)
+    std::string BuildHttpRequest(std::string uri)
     {
         // 构建http请求报文
         // 1. 构建http请求行
@@ -48,6 +50,19 @@ public:
         _request += _request_space;
         // 返回
         return std::move(_request);
+    }
+
+    void SendHttpResquest()
+    {
+        int ret = send(_sock, _request.c_str(), _request.size(), 0);
+        if (ret < 0)
+        {
+            // TODO
+        }
+    }
+    void RecvHttpResquest()
+    {
+        
     }
 
 private:
