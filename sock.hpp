@@ -10,6 +10,11 @@ class Socket
 public:
   Socket() {}
   ~Socket() {}
+  static void SetNoBlock(int sock)
+  {
+    int fl = fcntl(sock, F_GETFL);
+    fcntl(sock, F_SETFL, fl | O_NONBLOCK);
+  }
 
   static std::string DNSConvertion(std::string domain)
   {
