@@ -1,6 +1,8 @@
 #pragma once
 
 #include "sock.hpp"
+
+class Epoll;
 static const uint16_t DEFAULT_PORT = 80;
 static const std::string REQUEST_METHOD = "GET";
 static const std::string HTTP_VERSION = "HTTP/1.1";
@@ -14,20 +16,23 @@ static const std::string BLACKSPACE = " ";
  * 接口一： 构建http请求报文
  * 接口二： 返回套接字
  */
+
+// 封装了http请求报文、响应报文、构建方法、发送方法、接受方法
 class Http
 {
 public:
-    Http(std::string ip) : _ip(ip)
+    Http() {}
+    Http(std::string ip, std::string domain, Epoll *ep) : _ip(ip), _domain(domain), _r(ep)
     {
         // 初始化
         _sock = Socket::CreateSocket();
         Socket::Connect(_ip, _port, _sock);
-        Socket::SetNoBlock(_sock);
+        // Socket::SetNoBlock(_sock);
         memset(&_peer, 0, sizeof(_peer));
     }
     ~Http() {}
 
-    int Sock()
+    int Sock() const
     {
         return _sock;
     }
@@ -58,7 +63,7 @@ public:
     {
         _peer.sin_family = AF_INET;
         _peer.sin_port = htons(_port);
-        _peer.sin_addr.s_addr = inet_addr((Socket::DNSConvertion(_ip)).c_str());
+        _peer.sin_addr.s_addr = inet_addr(_ip.c_str());
         int ret = send(_sock, _request.c_str(), _request.size(), 0);
         if (ret < 0)
         {
@@ -67,30 +72,9 @@ public:
     }
     void RecvHttpResquest(std::string *out)
     {
-        // int size = 0;
-        // char buffer[1024] = {0};
-        // while (size = recv(_sock, buffer, sizeof(buffer) - 1, 0) > 0)
-        // {
-        //     buffer[size] = 0;
-        //     (*out) += buffer;
-        //     buffer[0] = 0;
-        // }
-        // char buffer[120024] = {0};
-        // ssize_t s = recv(_sock, buffer, sizeof(buffer) - 1, 0);
-        // std::cout << "s: " << s << "=====" << buffer << std::endl;
-        // char ch;
-        // ssize_t s = 1;
-        // while ((s = recv(_sock, &ch, 1, 0)))
-        // {
-        //     std::cout << "s:" << s << std::endl;
-        //     (*out) += ch;
-        //     std::cout << ch << std::endl;
-        //     sleep(1);
-        // }
-        // std::cout << "=========####=========" << std::endl;
         while (true)
         {
-            sleep(1);
+            // sleep(1);
             char buffer[1024] = {0};
             ssize_t s = recv(_sock, buffer, sizeof(buffer) - 1, 0);
             if (s > 0)
@@ -98,6 +82,8 @@ public:
                 buffer[s] = '\0';
                 (*out) += buffer;
                 std::cout << (*out) << std::endl;
+                std::cout << "=====================================================================================" << std::endl;
+                // sleep(1);
             }
             else
             {
@@ -117,11 +103,16 @@ public:
                 }
             }
         }
-        std::cout << (*out) << std::endl;
+        // std::cout << (*out) << std::endl;
     }
+
+public:
+    std::string _response;
+    Epoll *_r;
 
 private:
     std::string _ip;
+    std::string _domain;
     uint16_t _port = DEFAULT_PORT;
     int _sock;
     sockaddr_in _peer;
