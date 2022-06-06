@@ -7,6 +7,8 @@ client: $(BIN)
 .PHONY:clean
 clean:
 	rm -f client
+	rm -rf pages
+	mkdir pages
 .PHONY:debug
 debug:
 	$(CC) -o $@ $^ $(FLAG) -g

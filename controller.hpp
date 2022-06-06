@@ -3,6 +3,7 @@
 #include "epoll.hpp"
 #include "http.hpp"
 #include "downloader.hpp"
+#include "memorizer.hpp"
 // #include "config.hpp"
 // #include "downloader.hpp"
 // #include "parser.hpp"
@@ -87,10 +88,15 @@ public:
                 }
                 else
                 {
-                    for (auto &e : _page_storage)
-                    {
-                        std::cout << e << std::endl;
-                    }
+                    // for (auto &e : _page_storage)
+                    // {
+                    //     std::cout << e << std::endl;
+                    // }
+                    // 对于页面进行持久化处理
+                    Memorizer::Save(_page_storage);
+                    _page_storage.clear();
+                    // 进行页面处理，提取更多的URL
+
                     std::cout << "n: " << n << std::endl;
                 }
             }
