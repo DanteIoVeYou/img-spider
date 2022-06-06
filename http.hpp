@@ -27,7 +27,7 @@ public:
         // 初始化
         _sock = Socket::CreateSocket();
         Socket::Connect(_ip, _port, _sock);
-        // Socket::SetNoBlock(_sock);
+        Socket::SetNoBlock(_sock);
         memset(&_peer, 0, sizeof(_peer));
     }
     ~Http() {}
@@ -75,21 +75,24 @@ public:
         while (true)
         {
             // sleep(1);
-            char buffer[1024] = {0};
+            char buffer[2048] = {0};
             ssize_t s = recv(_sock, buffer, sizeof(buffer) - 1, 0);
             if (s > 0)
             {
+                usleep(10000);
                 buffer[s] = '\0';
                 (*out) += buffer;
-                std::cout << (*out) << std::endl;
-                std::cout << "=====================================================================================" << std::endl;
-                // sleep(1);
+                // std::cout << (*out) << std::endl;
+                // std::cout << "=====================================================================================" << std::endl;
+            }
+            else if (s == 0)
+            {
+                break;
             }
             else
             {
                 if (errno == EAGAIN || errno == EWOULDBLOCK)
                 {
-
                     std::cout << "EAGAIN" << std::endl;
                     break;
                 }
@@ -99,6 +102,7 @@ public:
                 }
                 else
                 {
+                    break;
                     std::cerr << "errrrrr" << std::endl;
                 }
             }

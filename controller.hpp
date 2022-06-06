@@ -18,41 +18,49 @@ public:
 
     void Start()
     {
-        while (!_url_wait_queue.empty())
-        {
-            Url url = _url_wait_queue.front();
-            _url_wait_queue.pop();
-            std::string ip = url._ip;
-            std::string domain = url._domain;
-            std::string path = url._path;
-            Http http(ip, domain, &_epoll);
-            // std::cout << "epolladd: " << &_epoll << std::endl;
-
-            _epoll.Add(http, EPOLLOUT); // 构建http请求
-            // sleep(1);
-            _epoll.Dispatch(10, 1000);
-            // _epoll.Modify(http, EPOLLIN);
-            _epoll.Dispatch(10, 1000);
-            std::cout << "-----" << std::endl;
-            // std::cout << http._response << std::endl;
-        }
-        // while (true)
+        // while (!_url_wait_queue.empty())
         // {
-        //     if (!_url_wait_queue.empty())
-        //     {
-        //         Url url = _url_wait_queue.front();
-        //         _url_wait_queue.pop();
-        //         std::string ip = url._ip;
-        //         std::string domain = url._domain;
-        //         std::string path = url._path;
-        //         Http http(ip, domain, &_epoll);
-        //         _epoll.Add(http, EPOLLOUT | EPOLLET); // 添加写事件
-        //     }
-        //     else
-        //     {
-        //         _epoll.Dispatch(10, -1);
-        //     }
+        //     Url url = _url_wait_queue.front();
+        //     _url_wait_queue.pop();
+        //     std::string ip = url._ip;
+        //     std::string domain = url._domain;
+        //     std::string path = url._path;
+        //     Http http(ip, domain, &_epoll);
+        //     _epoll.Add(http, EPOLLOUT | EPOLLET); // 构建http请求
+        //     _epoll.Dispatch(10, 1000, _page_storage);
+        //     _epoll.Dispatch(10, 1000, _page_storage);
+        //     std::cout << _page_storage.front() << std::endl;
         // }
+        while (true)
+        {
+            if (!_url_wait_queue.empty())
+            {
+                Url url = _url_wait_queue.front();
+                _url_wait_queue.pop();
+                std::string ip = url._ip;
+                std::string domain = url._domain;
+                std::string path = url._path;
+                Http http(ip, domain, &_epoll);
+                _epoll.Add(http, EPOLLOUT | EPOLLET); // 添加写事件
+            }
+            else
+            {
+                int n = _epoll.Dispatch(10, 3000, _page_storage);
+                if (n == 0)
+                {
+                    std::cout << "all ev resolved.." << std::endl;
+                    break;
+                }
+                else
+                {
+                    // for (auto &e : _page_storage)
+                    // {
+                    //     std::cout << e << std::endl;
+                    // }
+                    std::cout << "n: " << n << std::endl;
+                }
+            }
+        }
     }
     // 读取配置文件
 
@@ -72,4 +80,5 @@ private:
     Url _seed;
     std::unordered_map<std::string, Url> _url_map; // 已经抓取和待抓取的所有URL的集合
     std::queue<Url> _url_wait_queue;               // 未抓取的URL放入等待队列
+    std::vector<std::string> _page_storage;
 };
