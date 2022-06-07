@@ -7,6 +7,7 @@ public:
     static inline std::string DNSConvertion(std::string domain)
     {
         struct hostent *host = gethostbyname(domain.c_str());
+        std::cout << "###" << domain << "###" << std::endl;
         if (host == nullptr)
         {
             std::cerr << "域名解析错误" << std::endl;
@@ -23,7 +24,7 @@ public:
 class Url
 {
 public:
-    Url(std::string domain) : _domain(domain), _path("/")
+    Url(std::string domain, std::string path = "/") : _domain(domain), _depth(1)
     {
         _ip = Utils::DNSConvertion(_domain);
     }
@@ -33,4 +34,5 @@ public:
     std::string _domain;
     std::string _ip;
     std::string _path;
+    int _depth;
 };

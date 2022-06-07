@@ -1,5 +1,6 @@
 #include "controller.hpp"
 #include "utils.hpp"
+#include "parser.hpp"
 int main(int argc, char *argv[])
 {
   // std::string ip = Socket::DNSConvertion("www.baidu.com");
@@ -15,5 +16,15 @@ int main(int argc, char *argv[])
   Url seed("www.baidu.com");
   Controller con(seed);
   con.Start();
+
+  // std::string domain;
+  // std::string path;
+  // std::string url = "http://www.baidu.com/a/b/c/index/html";
+  // std::string url = "http://www.baidu.com/index.html";
+  // Parser::ParseDomainAndPath(url, &domain, &path);
+  // std::cout << "###"
+  //           << "domain: " << domain << "###" << std::endl;
+  // std::cout << "###"
+  //           << "path: " << path << "###" << std::endl;
   return 0;
 }

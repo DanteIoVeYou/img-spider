@@ -70,6 +70,8 @@ public:
         {
             if (!_url_wait_queue.empty())
             {
+                std::cout << "url_queue: " << _url_wait_queue.empty() << " " << _url_wait_queue.front()._domain << std::endl;
+
                 // 取出等待队列中的一个待抓取的URL
                 Url url = _url_wait_queue.front();
                 _url_wait_queue.pop();
@@ -79,6 +81,7 @@ public:
             }
             else
             {
+                std::cout << "get pages..." << std::endl;
                 // int n = downloader.Download(10, 2000, _page_storage);
                 int n = _epoll.Dispatch(10, 100, _page_storage);
                 if (n == 0)
@@ -94,10 +97,22 @@ public:
                     // }
                     // 对于页面进行持久化处理
                     Memorizer::Save(_page_storage);
-                    _page_storage.clear();
+                    // _page_storage.clear();
                     // 进行页面处理，提取更多的URL
+                    // for (auto e : _page_storage)
+                    // {
+                    //     std::cout << e << std::endl;
+                    // }
+                    Parser::GetALable(_page_storage, _url_map, _url_wait_queue);
+                    std::cout << "url_map: " << std::endl;
+                    for (auto u : _url_map)
+                    {
+                        std::cout << u.first << std::endl;
+                    }
+                    std::cout << "url_queue: " << _url_wait_queue.empty() << std::endl;
 
                     std::cout << "n: " << n << std::endl;
+                    sleep(5);
                 }
             }
         }

@@ -74,20 +74,18 @@ public:
     {
         while (true)
         {
+            usleep(10000);
+
             // sleep(1);
             char buffer[2048] = {0};
             ssize_t s = recv(_sock, buffer, sizeof(buffer) - 1, 0);
             if (s > 0)
             {
-                usleep(10000);
+                // usleep(10000);
                 buffer[s] = '\0';
                 (*out) += buffer;
                 // std::cout << (*out) << std::endl;
                 // std::cout << "=====================================================================================" << std::endl;
-            }
-            else if (s == 0)
-            {
-                break;
             }
             else
             {
@@ -103,7 +101,7 @@ public:
                 else
                 {
                     break;
-                    std::cerr << "errrrrr" << std::endl;
+                    std::cerr << "err" << std::endl;
                 }
             }
         }
