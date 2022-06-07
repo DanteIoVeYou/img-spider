@@ -79,7 +79,7 @@ public:
             ssize_t s = recv(_sock, buffer, sizeof(buffer) - 1, 0);
             if (s > 0)
             {
-                usleep(10000);
+           //     usleep(10000);
                 buffer[s] = '\0';
                 (*out) += buffer;
                 // std::cout << (*out) << std::endl;
@@ -107,7 +107,7 @@ public:
                 }
             }
         }
-        // std::cout << (*out) << std::endl;
+         std::cout << (*out) << std::endl;
     }
 
 public:
