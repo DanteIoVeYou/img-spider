@@ -54,8 +54,13 @@ public:
         _request_space = LF;
         // 组建http请求报文
         _request += _request_line;
+
+        // _request += "Host: www.sogou.com\n";
+
         _request += _request_space;
         // 返回
+        std::cout << _request << std::endl;
+        std::cout << "=================" << std::endl;
         return _request;
     }
 
@@ -105,7 +110,7 @@ public:
                 }
             }
         }
-        //std::cout << (*out) << std::endl;
+        // std::cout << (*out) << std::endl;
     }
 
 public:

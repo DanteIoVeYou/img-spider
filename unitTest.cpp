@@ -13,7 +13,8 @@ int main(int argc, char *argv[])
 
   // std::cout << msg << std::endl;
 
-  Url seed("www.baidu.com");
+  // Url seed("www.baidu.com");
+  Url seed("www.sogou.com");
   Controller con(seed);
   con.Start();
 
